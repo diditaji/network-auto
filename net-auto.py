@@ -1,5 +1,4 @@
 from netmiko import ConnectHandler
-from netmiko import ConnectHandler
 from netmiko.ssh_exception import NetMikoTimeoutException
 from netmiko.ssh_exception import NetMikoAuthenticationException
 import pandas as pd
@@ -17,12 +16,14 @@ document3 = Document()
 document4 = Document()
 document5 = Document()
 
-
+# Change username using your username
 platform = 'cisco_ios'
-username = 'adm.didit.aji'
+username = 'adm.didit.aji' 
 
+# This will return current directory
 path=os.path.dirname(os.path.realpath(__file__))
 os.chdir(path)
+
 
 try:
     ip_add_file = open('ipaddress.txt','r')

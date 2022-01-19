@@ -15,4 +15,4 @@ Enter your choice:<br>
 <h2>How to use</h2>
 <p>First step, you must change the username which you will be used for login to each switch inside net-auto.py.
 <p>username = 'xxxxxx'
-<p>Then, fill ipaddress.txt with list of IP Address of your switch, save it. Please make sure you have pyhton library installed : netmiko, pandas and docx
+<p>Then, fill ipaddress.txt with list of IP Address of your switch, save it. Please make sure you have pyhton library installed : netmiko, pandas and python-docx
