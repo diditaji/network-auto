@@ -68,7 +68,7 @@ def showrun():
                 logging.warning( 'the device cannot be connected, please check whether the network is communicating normally ')
             except NetMikoAuthenticationException:
                 logging.warning(' login failed, user name or password error ')
-
+    ip_add_file.close()
 def showver():
     password = getpass()
     for host in ip_add_file:
@@ -92,7 +92,7 @@ def showver():
                 logging.warning( 'the device cannot be connected, please check whether the network is communicating normally ')
             except NetMikoAuthenticationException:
                 logging.warning(' login failed, user name or password error ')
-
+    ip_add_file.close()
 def showcpu():
     password = getpass()
     for host in ip_add_file:
@@ -110,7 +110,7 @@ def showcpu():
                 logging.warning( 'the device cannot be connected, please check whether the network is communicating normally ')
             except NetMikoAuthenticationException:
                 logging.warning(' login failed, user name or password error ')
-
+    ip_add_file.close()
 
 def showall():
     password = getpass()
@@ -149,6 +149,7 @@ def showall():
                 logging.warning( 'the device cannot be connected, please check whether the network is communicating normally ')
             except NetMikoAuthenticationException:
                 logging.warning(' login failed, user name or password error ')
+    ip_add_file.close()
 
 def showallversion():
     password = getpass()
@@ -168,7 +169,8 @@ def showallversion():
             except NetMikoAuthenticationException:
                 logging.warning(' login failed, user name or password error ')       
     print('switch-show-version-all.xlsx'+' is done !')
-
+    ip_add_file.close()
+    
 while True:
     print("\nNetwork Automation Menu : \n")
     print("1.Show environment-docx")
