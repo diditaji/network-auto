@@ -9,6 +9,7 @@ from docx import Document
 from docx.shared import Inches
 import time
 import logging
+import os
 
 document = Document()
 document2 = Document()
@@ -20,8 +21,17 @@ document5 = Document()
 platform = 'cisco_ios'
 username = 'adm.didit.aji'
 
+path=os.path.dirname(os.path.realpath(__file__))
+os.chdir(path)
 
-ip_add_file = open(r'ipaddress.txt','r')
+try:
+    ip_add_file = open('ipaddress.txt','r')
+    print ("ipaddress.txt found !")
+    time.sleep(1)
+except IOError:
+    print ("No ipaddress.txt found ! Please check.")
+    time.sleep(3)
+    exit()
 
 def showenv():
     password = getpass()
@@ -29,8 +39,8 @@ def showenv():
             hostdev = host.strip()
             try:
                 device = ConnectHandler(device_type=platform, ip=hostdev, username=username, password=password)
-                sh_env= device.send_command('show environment', use_textfsm=True)
-                document.add_heading('Show Environment '+hostdev, 0)
+                sh_env= device.send_command('show environment all', use_textfsm=True)
+                document.add_heading('Show Environment '+hostdev)
                 paragraph = document.add_paragraph(sh_env)
                 document.save(hostdev+'-show-env.docx')
                 print(hostdev+'-show-env.docx'+' is done !')
@@ -40,7 +50,7 @@ def showenv():
                 logging.warning( 'the device cannot be connected, please check whether the network is communicating normally ')
             except NetMikoAuthenticationException:
                 logging.warning(' login failed, user name or password error ')
-
+    ip_add_file.close()
 def showrun():
     password = getpass()
     for host in ip_add_file:
@@ -140,6 +150,25 @@ def showall():
             except NetMikoAuthenticationException:
                 logging.warning(' login failed, user name or password error ')
 
+def showallversion():
+    password = getpass()
+
+    for host in ip_add_file:
+            hostdev = host.strip()
+            try:
+                dataver = []
+                device = ConnectHandler(device_type=platform, ip=hostdev, username=username, password=password)
+                dataver.extend(device.send_command('show version', use_textfsm=True))
+                df = pd.DataFrame(dataver)
+                df.to_excel('switch-show-version-all.xlsx', index=False)
+            except ValueError:
+                logging.warning('Secret  password mistake ')
+            except NetMikoTimeoutException:
+                logging.warning( 'the device cannot be connected, please check whether the network is communicating normally ')
+            except NetMikoAuthenticationException:
+                logging.warning(' login failed, user name or password error ')       
+    print('switch-show-version-all.xlsx'+' is done !')
+
 while True:
     print("\nNetwork Automation Menu : \n")
     print("1.Show environment-docx")
@@ -147,7 +176,8 @@ while True:
     print("3.Show version-docx")    
     print("4.Show cpu-docx")
     print("5.Show all-docx")
-    print("6.Exit")
+    print("6.Show all-version-xlsx")
+    print("7.Exit")
 
     choice=int(input("\nEnter your choice: "))
 
@@ -173,7 +203,11 @@ while True:
         time.sleep(3)
 
     elif choice==6:
-        print('Thank you !')
+        showallversion()
+        time.sleep(3)
+
+    elif choice==7:
+        print('Bye !')
         time.sleep(3)
         break
     else:
