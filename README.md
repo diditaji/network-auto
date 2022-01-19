@@ -7,7 +7,8 @@ Network Automation Menu : </p>
 3.Show version-docx<br>
 4.Show cpu-docx<br>
 5.Show all-docx<br>
-6.Exit<br>
+6.Show all-version-xlsx<br>
+7.Exit<br>
 
 Enter your choice:<br>
 
