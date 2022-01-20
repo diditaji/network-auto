@@ -18,6 +18,9 @@ document5 = Document()
 
 # Change username using your username
 platform = 'cisco_ios'
+platform-asa = 'cisco_asa'
+platform-pa = 'paloalto_panos'
+
 username = 'adm.didit.aji' 
 
 # This will return current directory
@@ -26,13 +29,32 @@ os.chdir(path)
 
 
 try:
-    ip_add_file = open('ipaddress.txt','r')
-    print ("ipaddress.txt found !")
+    ip_add_file = open('cisco-ipaddress.txt','r')
+    print ("cisco-ipaddress.txt found !")
     time.sleep(1)
 except IOError:
-    print ("No ipaddress.txt found ! Please check.")
+    print ("No Cisco Device ipaddress.txt found ! Please check.")
     time.sleep(3)
     exit()
+
+try:
+    ip_add_file_pa = open('pa-ipaddress.txt','r')
+    print ("pa-ipaddress.txt found !")
+    time.sleep(1)
+except IOError:
+    print ("No Palo Alto Device ipaddress.txt found ! Please check.")
+    time.sleep(3)
+    exit()
+
+try:
+    ip_add_file_asa = open('asa-ipaddress.txt','r')
+    print ("asa-ipaddress.txt found !")
+    time.sleep(1)
+except IOError:
+    print ("No ASA Device ipaddress.txt found ! Please check.")
+    time.sleep(3)
+    exit()
+
 
 def showenv():
     password = getpass()
@@ -179,8 +201,10 @@ while True:
     print("3.Show version-docx")    
     print("4.Show cpu-docx")
     print("5.Show all-docx")
-    print("6.Show all-version-xlsx")
-    print("7.Exit")
+    print("6.Show PaloAlto info-docx")
+    print("7.Show ASA config.docx")
+    print("8.Show all-version-xlsx")
+    print("9.Exit")
 
     choice=int(input("\nEnter your choice: "))
 
@@ -210,6 +234,14 @@ while True:
         time.sleep(3)
 
     elif choice==7:
+        pprint('In development !')
+        time.sleep(3)
+
+    elif choice==8:
+        pprint('In development !')
+        time.sleep(3)        
+
+    elif choice==9:
         print('Bye !')
         time.sleep(3)
         break
