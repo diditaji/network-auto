@@ -7,6 +7,7 @@ from pprint import pprint
 from docx import Document
 from docx.shared import Inches
 import time
+from datetime import datetime
 import logging
 import os
 
@@ -18,8 +19,8 @@ document5 = Document()
 
 # Change username using your username
 platform = 'cisco_ios'
-platform-asa = 'cisco_asa'
-platform-pa = 'paloalto_panos'
+platform_asa = 'cisco_asa'
+platform_pa = 'paloalto_panos'
 
 username = 'adm.didit.aji' 
 
@@ -27,6 +28,8 @@ username = 'adm.didit.aji'
 path=os.path.dirname(os.path.realpath(__file__))
 os.chdir(path)
 
+dt = str(datetime.now().strftime("%Y_%m_%d"))
+# Create directory
 
 try:
     ip_add_file = open('cisco-ipaddress.txt','r')
@@ -55,8 +58,8 @@ except IOError:
     time.sleep(3)
     exit()
 
-
 def showenv():
+    createfolder()
     password = getpass()
     for host in ip_add_file:
             hostdev = host.strip()
@@ -65,7 +68,7 @@ def showenv():
                 sh_env= device.send_command('show environment all', use_textfsm=True)
                 document.add_heading('Show Environment '+hostdev)
                 paragraph = document.add_paragraph(sh_env)
-                document.save(hostdev+'-show-env.docx')
+                document.save(wrkdir+"\\"+hostdev+'-show-env.docx')
                 print(hostdev+'-show-env.docx'+' is done !')
             except ValueError:
                 logging.warning('Secret  password mistake ')
@@ -207,8 +210,6 @@ while True:
     print("9.Exit")
 
     choice=int(input("\nEnter your choice: "))
-
-
     if choice==1:
         showenv()
         time.sleep(3)
@@ -230,7 +231,7 @@ while True:
         time.sleep(3)
 
     elif choice==6:
-        showallversion()
+        pprint('In development !')
         time.sleep(3)
 
     elif choice==7:
@@ -238,7 +239,7 @@ while True:
         time.sleep(3)
 
     elif choice==8:
-        pprint('In development !')
+        showallversion()
         time.sleep(3)        
 
     elif choice==9:
