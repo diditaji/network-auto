@@ -11,11 +11,6 @@ from datetime import datetime
 import logging
 import os
 
-document = Document()
-document2 = Document()
-document3 = Document()
-document4 = Document()
-document5 = Document()
 
 # Change username using your username
 platform = 'cisco_ios'
@@ -58,18 +53,26 @@ except IOError:
     time.sleep(3)
     exit()
 
+
+dataver = []
+
 def showenv():
-    createfolder()
     password = getpass()
     for host in ip_add_file:
             hostdev = host.strip()
             try:
                 device = ConnectHandler(device_type=platform, ip=hostdev, username=username, password=password)
                 sh_env= device.send_command('show environment all', use_textfsm=True)
+                document = Document()
                 document.add_heading('Show Environment '+hostdev)
                 paragraph = document.add_paragraph(sh_env)
-                document.save(wrkdir+"\\"+hostdev+'-show-env.docx')
+                document.save(hostdev+'-show-env.docx')
                 print(hostdev+'-show-env.docx'+' is done !')
+                
+                ##Generate .txt files
+                with open(hostdev+"-show-run"+".txt", "w") as external_file:
+                    print(sh_run, file=external_file)
+                    external_file.close()
             except ValueError:
                 logging.warning('Secret  password mistake ')
             except NetMikoTimeoutException:
@@ -84,6 +87,7 @@ def showrun():
             try:
                 device = ConnectHandler(device_type=platform, ip=hostdev, username=username, password=password)
                 sh_run= device.send_command('show running-config', use_textfsm=True)
+                document2 = Document()
                 document2.add_heading('Show Running Config '+hostdev, 0)
                 paragraph = document2.add_paragraph(sh_run)
                 document2.save(hostdev+'-show-run.docx')
@@ -105,6 +109,7 @@ def showver():
                 hostname= sh_ver[0]['hostname']
                 version= sh_ver[0]['version']
                 serial= sh_ver[0]['serial']
+                document3 = Document()
                 document3.add_heading('Show Version '+hostdev, 0)
                 paragraph = document3.add_paragraph('Hostname : '+hostname)
                 paragraph = document3.add_paragraph('Version : '+version)
@@ -126,6 +131,7 @@ def showcpu():
             try:
                 device = ConnectHandler(device_type=platform, ip=hostdev, username=username, password=password)
                 sh_cpu= device.send_command('show process cpu history',use_textfsm=True)
+                document4 = Document()
                 document4.add_heading('Show CPU History '+hostdev, 0)
                 paragraph = document4.add_paragraph(sh_cpu)
                 document4.save(hostdev+'-show-cpu.docx')
@@ -144,8 +150,9 @@ def showall():
             hostdev = host.strip()
             try:
                 device = ConnectHandler(device_type=platform, ip=hostdev, username=username, password=password)
-                
                 sh_env= device.send_command('show environment', use_textfsm=True)
+
+                document5 = Document()
                 document5.add_heading('Show Environment '+hostdev, 0)
                 paragraph = document5.add_paragraph(sh_env)
 
@@ -183,7 +190,7 @@ def showallversion():
     for host in ip_add_file:
             hostdev = host.strip()
             try:
-                dataver = []
+
                 device = ConnectHandler(device_type=platform, ip=hostdev, username=username, password=password)
                 dataver.extend(device.send_command('show version', use_textfsm=True))
                 df = pd.DataFrame(dataver)
@@ -196,17 +203,38 @@ def showallversion():
                 logging.warning(' login failed, user name or password error ')       
     print('switch-show-version-all.xlsx'+' is done !')
     ip_add_file.close()
-    
+
+
+def showconfigasa():
+    password = getpass()
+    for host in ip_add_file_asa:
+            hostdev = host.strip()
+            try:
+                device = ConnectHandler(device_type=platform_asa, ip=hostdev, username=username, password=password)
+                sh_run= device.send_command('show running-config', use_textfsm=True)
+                document2 = Document()
+                document2.add_heading('Show Running Config '+hostdev, 0)
+                paragraph = document2.add_paragraph(sh_run)
+                document2.save(hostdev+'-asa-show-run.docx')
+                print(hostdev+'-asa-show-run.docx'+' is done !')
+            except ValueError:
+                logging.warning('Secret  password mistake ')
+            except NetMikoTimeoutException:
+                logging.warning( 'the device cannot be connected, please check whether the network is communicating normally ')
+            except NetMikoAuthenticationException:
+                logging.warning(' login failed, user name or password error ')
+    ip_add_file_asa.close()
+
 while True:
     print("\nNetwork Automation Menu : \n")
-    print("1.Show environment-docx")
-    print("2.Show running-config-docx")
-    print("3.Show version-docx")    
-    print("4.Show cpu-docx")
-    print("5.Show all-docx")
-    print("6.Show PaloAlto info-docx")
-    print("7.Show ASA config.docx")
-    print("8.Show all-version-xlsx")
+    print("1.Show Environment >> output : docx")
+    print("2.Show Running Config >> output : docx")
+    print("3.Show Version >> output : docx")    
+    print("4.Show CPU >> output : docx")
+    print("5.Show Env, Run, Ver and CPU >> output : docx")
+    print("6.Show Config PA >> output : docx")
+    print("7.Show Running Config ASA >> output : docx")
+    print("8.Show Version Cisco Switch >> output : xlsx")
     print("9.Exit")
 
     choice=int(input("\nEnter your choice: "))
@@ -235,7 +263,7 @@ while True:
         time.sleep(3)
 
     elif choice==7:
-        pprint('In development !')
+        showconfigasa()
         time.sleep(3)
 
     elif choice==8:
